@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  app:
+    restart: on-failure
+    image: euchida/template-docker
+    ports:
+      - 8000:8000
+    depends_on:
+      - mysql
+    networks:
+      - fullstack
+  
+  mysql:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment: 
+      - MYSQL_ROOT_HOST=${DB_HOST} 
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - mysqldata:/var/lib/mysql
+      - ./init_data:/docker-entrypoint-initdb.d/init_data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command:
+      --secure-file-priv=docker-entrypoint-initdb.d
+    networks:
+      - fullstack 
+    
+volumes:
+  mysqldata:
+    driver: local
+
+networks:
+  fullstack:
+    driver: bridge
