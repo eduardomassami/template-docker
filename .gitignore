@@ -13,3 +13,10 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+.env
+.vscode/
+__debug_bin
+*.log
+/mocks/*
+coverage.*
